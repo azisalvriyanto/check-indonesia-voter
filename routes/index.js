@@ -2,20 +2,7 @@ const express = require("express");
 const { checkIdentityNumber } = require("../utils/helpers");
 const router = express.Router();
 
-router.get("/", function (request, response, next) {
-  return response.json({
-    meta: {
-      success: true,
-      code: 200,
-      message: "Made with love by Sintas",
-      errors: [],
-    },
-    data: null,
-  });
-});
-
-router.post("/", async function (request, response, next) {
-  const identityNumber = request.body.identity_number;
+const handleCheckIdentityNumber = async (identityNumber) => {
   let res = {};
 
   if (
@@ -35,6 +22,33 @@ router.post("/", async function (request, response, next) {
   } else {
     res = await checkIdentityNumber(identityNumber);
   }
+
+  return res;
+};
+
+router.get("/", function (request, response, next) {
+  return response.json({
+    meta: {
+      success: true,
+      code: 200,
+      message: "Made with love by Sintas",
+      errors: [],
+    },
+    data: null,
+  });
+});
+
+router.post("/", async function (request, response, next) {
+  const identityNumber = request.body.identity_number;
+  const res = handleCheckIdentityNumber(identityNumber);
+  response.status(res.meta.code);
+
+  return response.json(res);
+});
+
+router.get("/:identityNumber", async function (request, response, next) {
+  const identityNumber = request.params.identityNumber;
+  const res = await handleCheckIdentityNumber(identityNumber);
   response.status(res.meta.code);
 
   return response.json(res);
