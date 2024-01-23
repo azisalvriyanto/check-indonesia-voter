@@ -6,6 +6,9 @@ async function checkIdentityNumber(identityNumber) {
   const chromeOptions = new chrome.Options();
   chromeOptions.addArguments("headless");
   chromeOptions.addArguments("window-size=1280x800");
+  chromeOptions.addArguments("headless");
+  chromeOptions.addArguments("no-sandbox");
+  chromeOptions.addArguments("disable-dev-shm-usage");
   chromeOptions.addArguments(
     'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537"'
   );
