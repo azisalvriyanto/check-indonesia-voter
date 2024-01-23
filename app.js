@@ -1,14 +1,15 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+require("dotenv").config();
 
 const indexRouter = require("./routes/index");
 const { normalizePort } = require("./utils/helpers.js");
 const app = express();
 const port = normalizePort(process.env.PORT || "3000");
 
-app.set("port", port);
 app.set("host", "0.0.0.0");
+app.set("port", port);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
