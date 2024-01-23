@@ -40,13 +40,13 @@ router.get("/", function (request, response, next) {
 
 router.post("/", async function (request, response, next) {
   const identityNumber = request.body.identity_number;
-  const res = handleCheckIdentityNumber(identityNumber);
+  const res = await handleCheckIdentityNumber(identityNumber);
   response.status(res.meta.code);
 
   return response.json(res);
 });
 
-router.get("/:identityNumber", async function (request, response, next) {
+router.get("/check/:identityNumber", async function (request, response, next) {
   const identityNumber = request.params.identityNumber;
   const res = await handleCheckIdentityNumber(identityNumber);
   response.status(res.meta.code);
