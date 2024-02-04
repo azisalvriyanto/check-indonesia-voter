@@ -17,17 +17,30 @@ async function checkIdentityNumber(identityNumber) {
     .forBrowser("chrome")
     .setChromeOptions(chromeOptions)
     .build();
-  await driver.sleep(5000);
+  await driver.sleep(3000);
+
+  let screenshot = null;
+  let thisTime = new Date()
+    .toLocaleString("sv-SE", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    })
+    .replaceAll("-", "")
+    .replaceAll(" ", "_")
+    .replaceAll(":", "_");
 
   try {
-    let screenshot = null;
     await driver.get("https://cekdptonline.kpu.go.id");
 
     const inputField = await driver.wait(
       until.elementLocated(By.css('input[type="text"].form-control')),
-      20000
+      5000
     );
-    inputField.clear();
     await inputField.sendKeys(identityNumber);
     const button = await driver.findElement(
       By.xpath('//button[normalize-space()="Pencarian"]')
@@ -35,12 +48,12 @@ async function checkIdentityNumber(identityNumber) {
     await button.click();
 
     const content = await driver.wait(
-      until.elementLocated(By.css(".column")),
+      until.elementLocated(By.css(".showMap")),
       5000
     );
     screenshot = await driver.takeScreenshot();
     fs.writeFileSync(
-      `storage/voter-results/${identityNumber}.png`,
+      `storage/voter-results/${thisTime}_${identityNumber}.png`,
       screenshot,
       "base64"
     );
@@ -90,13 +103,20 @@ async function checkIdentityNumber(identityNumber) {
         },
       },
     };
-  } catch (e) {
+  } catch (errorMessage) {
+    screenshot = await driver.takeScreenshot();
+    fs.writeFileSync(
+      `storage/error-results/${thisTime}_${identityNumber}.png`,
+      screenshot,
+      "base64"
+    );
+
     return {
       meta: {
         success: false,
         code: 500,
-        message: "Server error",
-        errors: e,
+        message: `${errorMessage}`,
+        errors: [],
       },
       data: null,
     };
