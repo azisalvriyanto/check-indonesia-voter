@@ -22,6 +22,7 @@ async function checkIdentityNumber(identityNumber) {
   let screenshot = null;
   let thisTime = new Date()
     .toLocaleString("sv-SE", {
+      timeZone: "Asia/Jakarta",
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
